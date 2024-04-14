@@ -1,38 +1,16 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Header } from "../../components/Header"
 import { Summary } from "../../components/Summary"
 import { SearchForm } from "./components/SearchForm"
 
 import { PriceHighlight, TransactionsContainer, TransactionsTable } from './styles'
+import { TransactionsContext } from "../../contexts/TransactionsContext"
+import { dateFormatter, priceFormatter } from "../../utils/formatter"
 
-interface Transactions {
-    id: number,
-    description: string,
-    type: 'income' | 'outcome',
-    price: number,
-    category: string,
-    createdAt: string
-}
+
 
 export function Transactions() {
-    const [transactions, setTransactions] = useState<Transactions[]>([])
-
-    useEffect(() => {
-        async function loadTransactions() {
-            const response = await fetch('http://localhost:3333/transactions')
-            const data = await response.json()
-            setTransactions(data)
-        }
-
-        loadTransactions()
-        // fetch('http://localhost:3333/transactions')
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log(data);
-        // })
-
-    }, [])
-
+    const { transactions } = useContext(TransactionsContext)
 
     return (
         <div>
@@ -53,11 +31,12 @@ export function Transactions() {
                                             <PriceHighlight
                                                 variant={transaction.type}
                                             >
-                                                {transaction.price}
+                                                {transaction.type === 'outcome' && '- '}
+                                                {priceFormatter.format(transaction.price)}
                                             </PriceHighlight>
                                         </td>
                                         <td>{transaction.category}</td>
-                                        <td>{transaction.createdAt}</td>
+                                        <td>{dateFormatter.format(new Date(transaction.createdAt))}</td>
                                     </tr>
                                 )
                             })
