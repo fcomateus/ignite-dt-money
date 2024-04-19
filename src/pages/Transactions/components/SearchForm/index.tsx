@@ -5,7 +5,6 @@ import * as zod from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TransactionsContext } from "../../../../contexts/TransactionsContext";
 import { useContextSelector } from "use-context-selector";
-import { memo } from "react";
 
 const searchFormSchema = zod.object({
     query: zod.string()
@@ -13,7 +12,7 @@ const searchFormSchema = zod.object({
 
 type SearchFormInputs = zod.infer<typeof searchFormSchema>
 
-function SearchFormComponent() {
+export function SearchForm() {
     const fetchTransactions = useContextSelector(TransactionsContext, (context) => {
         return context.fetchTransactions
     })
@@ -51,5 +50,3 @@ function SearchFormComponent() {
         </SearchFormContainer>
     )
 }
-
-export const SearchForm = memo(SearchFormComponent)
